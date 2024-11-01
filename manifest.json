@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Recitube",
+  "version": "1.0",
+  "description": "YouTube transcript analyzer",
+  "permissions": ["activeTab", "sidePanel"],
+  "action": {
+    "default_title": "Extract Transcript"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+} 
