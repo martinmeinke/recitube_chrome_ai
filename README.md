@@ -48,3 +48,7 @@ function extractTranscriptText() {
 // Run the function to open and extract the transcript
 openTranscript();
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
