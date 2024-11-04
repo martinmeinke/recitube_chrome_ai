@@ -1,8 +1,3 @@
-// Helper delay function using regular setTimeout
-function delay(ms, callback) {
-    setTimeout(callback, ms);
-}
-
 // Listen for message from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "extractTranscript") {
@@ -24,27 +19,46 @@ async function extractTranscriptText() {
     const transcriptContainer = document.querySelector('ytd-transcript-renderer');
     if (transcriptContainer) {
         const segments = transcriptContainer.querySelectorAll('yt-formatted-string.ytd-transcript-segment-renderer');
-        const transcriptText = [...segments].map(segment => segment.innerText).join(' ');
+        transcriptText = [...segments].map(segment => segment.innerText).join(' ');
         console.log("Transcript text:", transcriptText);
+
+        const MAX_TRANSCRIPT_LENGTH = 2000;
+        transcriptText = transcriptText.substring(0, MAX_TRANSCRIPT_LENGTH);
         
         try {
             const model = await initializeAI();
             if (model) {
-                const response = await model.prompt("Please return a list of all cooking ingredients from this video transcript: " + transcriptText);
+                const PROMPT_TEMPLATE = `This is the youtube transcript of a recipe video: ${transcriptText}
+                It might contain one or multiple recipes. I want you to list all ingredients, recipe by recipe, such that i can easily search for them online.
+                Please list just the recipe title and ingredients, no amounts needed. Please return just the plain ingredient info.
+                Your output must always be only JSON , here is an example response:
+                
+                {{[{"name": "Tuna with rice", "ingredients": ["Tuna", "Rice"]},{"name": "Broccoli with garlic", "ingredients": ["garlic", "broccoli"]}]}}
+                
+                Under no circumstances return any preamble or explanations. Start your output with [ and end with ].
+                Don't output any newlines`;
+                console.log("PROMPT_TEMPLATE", PROMPT_TEMPLATE);
+                response = await model.prompt(PROMPT_TEMPLATE);
+                response = response.trim();
                 console.log("AI Response:", response);
                 
                 // Parse the response into an array of ingredients
-                const ingredients = response.split('\n')
-                    .filter(line => line.trim())
-                    .map(line => line.replace(/^[-•*]\s*/, '').trim());
-                
-                // Send ingredients to background script instead
-                chrome.runtime.sendMessage({
-                    type: 'ingredientsForSidePanel',
-                    ingredients: ingredients
-                }).catch(error => {
-                    console.log('Error sending message:', error);
-                });
+                try {
+                    if(response.startsWith("```json")) {
+                        response = response.substring(7, response.length-3);
+                    }
+
+                    const parsedResponse = JSON.parse(response);
+                    console.log("Recipe data sent to background script:", parsedResponse);
+                    chrome.runtime.sendMessage({
+                        type: 'ingredientsForSidePanel',
+                        recipes: parsedResponse
+                    }).catch(error => {
+                        console.log('Error sending message:', error);
+                    });
+                } catch (error) {
+                    console.error("Error parsing AI response:", error);
+                }
             }
         } catch (error) {
             console.error("Error processing with AI:", error);
@@ -66,11 +80,11 @@ function openTranscript() {
                     extractTranscriptText().catch(error => {
                         console.error("Error in extractTranscriptText:", error);
                     });
-                }, 2000);
+                }, 500);
             } else {
                 console.log("Transcript button not found or unavailable for this video.");
             }
-        }, 1000);
+        }, 500);
     } else {
         console.log("More actions button not found.");
     }
