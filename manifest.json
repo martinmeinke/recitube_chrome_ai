@@ -2,10 +2,16 @@
   "manifest_version": 3,
   "name": "Recitube",
   "version": "1.0",
-  "description": "YouTube transcript analyzer",
+  "description": "Extract ingredients from YouTube videos",
   "permissions": ["activeTab", "sidePanel"],
   "action": {
-    "default_title": "Extract Transcript"
+    "default_title": "Extract Ingredients",
+    "default_icon": {
+        "16": "img/chefs_hat_16.png",
+        "32": "img/chefs_hat_32.png",
+        "48": "img/chefs_hat_48.png",
+        "128": "img/chefs_hat_128.png"
+    }
   },
   "side_panel": {
     "default_path": "sidepanel.html"
@@ -18,5 +24,11 @@
   ],
   "background": {
     "service_worker": "background.js"
+  } ,
+  "icons": {
+    "16": "img/chefs_hat_16.png",
+    "32": "img/chefs_hat_32.png",
+    "48": "img/chefs_hat_48.png",
+    "128": "img/chefs_hat_128.png"
   }
 } 

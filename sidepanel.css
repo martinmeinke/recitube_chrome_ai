@@ -1,35 +1,77 @@
-.recipe {
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #f5f5f5;
-}
-
-.recipe h3 {
-    margin: 0 0 10px 0;
-    color: #333;
-}
-
-.recipe ul {
+body {
     margin: 0;
-    padding-left: 20px;
+    box-sizing: border-box; /* Ensures padding doesn’t cause overflow */
+    overflow-x: hidden; /* Hides any remaining horizontal overflow */
+    padding: 16px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f5f5;
 }
 
-.recipe li {
-    margin: 5px 0;
-    color: #666;
+.ingredients-list {
+    padding: 0 16px;
+    width: 100%;
+}
+
+.recipe-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.recipe-title {
+    color: #1a73e8;
+    margin: 0 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8eaed;
+}
+
+.ingredients-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ingredients-table tr {
+    border-bottom: 1px solid #e8eaed;
+}
+
+.ingredients-table tr:last-child {
+    border-bottom: none;
+}
+
+.ingredients-table td {
+    padding: 8px 4px;
+}
+
+.ingredients-table td:last-child {
+    text-align: right;
+}
+
+.buy-link {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #1a73e8;
+    color: white;
+    text-decoration: none;
+    border-radius: 16px;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+.buy-link:hover {
+    background: #1557b0;
 }
 
 #status-message {
-    padding: 10px;
+    background: #e8f0fe;
+    color: #1a73e8;
+    padding: 12px;
+    border-radius: 8px;
     margin-bottom: 16px;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-    font-style: italic;
-    color: #666;
 }
 
 #status-message.error {
-    background-color: #ffebee;
-    color: #c62828;
+    background: #fce8e6;
+    color: #d93025;
 } 
