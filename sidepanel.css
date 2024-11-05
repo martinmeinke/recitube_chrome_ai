@@ -18,4 +18,18 @@
 .recipe li {
     margin: 5px 0;
     color: #666;
+}
+
+#status-message {
+    padding: 10px;
+    margin-bottom: 16px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    font-style: italic;
+    color: #666;
+}
+
+#status-message.error {
+    background-color: #ffebee;
+    color: #c62828;
 } 

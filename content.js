@@ -1,6 +1,16 @@
+// Add custom logger at the top of your file
+const logger = {
+    prefix: '[Recitube]',
+    log: (...args) => console.log(logger.prefix, ...args),
+    error: (...args) => console.error(logger.prefix, ...args),
+    info: (...args) => console.info(logger.prefix, ...args),
+    warn: (...args) => console.warn(logger.prefix, ...args)
+};
+
 // Listen for message from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "extractTranscript") {
+        chrome.runtime.sendMessage({ type: 'processingStarted' });
         openTranscript();
     }
 });
@@ -10,7 +20,7 @@ async function initializeAI() {
         const model = await window.ai.assistant.create();
         return model;
     } catch (error) {
-        console.error("Error initializing AI:", error);
+        logger.error("Error initializing AI:", error);
         return null;
     }
 }
@@ -20,7 +30,7 @@ async function extractTranscriptText() {
     if (transcriptContainer) {
         const segments = transcriptContainer.querySelectorAll('yt-formatted-string.ytd-transcript-segment-renderer');
         transcriptText = [...segments].map(segment => segment.innerText).join(' ');
-        console.log("Transcript text:", transcriptText);
+        logger.log("Transcript text:", transcriptText);
 
         const MAX_TRANSCRIPT_LENGTH = 2000;
         transcriptText = transcriptText.substring(0, MAX_TRANSCRIPT_LENGTH);
@@ -37,10 +47,10 @@ async function extractTranscriptText() {
                 
                 Under no circumstances return any preamble or explanations. Start your output with [ and end with ].
                 Don't output any newlines`;
-                console.log("PROMPT_TEMPLATE", PROMPT_TEMPLATE);
+                logger.log("PROMPT_TEMPLATE", PROMPT_TEMPLATE);
                 response = await model.prompt(PROMPT_TEMPLATE);
                 response = response.trim();
-                console.log("AI Response:", response);
+                logger.log("AI Response:", response);
                 
                 // Parse the response into an array of ingredients
                 try {
@@ -49,22 +59,23 @@ async function extractTranscriptText() {
                     }
 
                     const parsedResponse = JSON.parse(response);
-                    console.log("Recipe data sent to background script:", parsedResponse);
+                    logger.log("Recipe data sent to background script:", parsedResponse);
                     chrome.runtime.sendMessage({
                         type: 'ingredientsForSidePanel',
                         recipes: parsedResponse
                     }).catch(error => {
-                        console.log('Error sending message:', error);
+                        logger.log('Error sending message:', error);
                     });
                 } catch (error) {
-                    console.error("Error parsing AI response:", error);
+                    logger.error("Error parsing AI response:", error);
                 }
             }
         } catch (error) {
-            console.error("Error processing with AI:", error);
+            logger.error("Error processing with AI:", error);
+            chrome.runtime.sendMessage({ type: 'error', error: 'AI Error' });
         }
     } else {
-        console.log("Transcript content not found.");
+        logger.log("Transcript content not found.");
     }
 }
 
@@ -78,14 +89,14 @@ function openTranscript() {
                 transcriptButton.click();
                 setTimeout(() => {
                     extractTranscriptText().catch(error => {
-                        console.error("Error in extractTranscriptText:", error);
+                        logger.error("Error in extractTranscriptText:", error);
                     });
-                }, 500);
+                }, 1000);
             } else {
-                console.log("Transcript button not found or unavailable for this video.");
+                logger.log("Transcript button not found or unavailable for this video.");
             }
-        }, 500);
+        }, 1000);
     } else {
-        console.log("More actions button not found.");
+        logger.log("More actions button not found.");
     }
 }
