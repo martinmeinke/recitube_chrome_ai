@@ -26,4 +26,3 @@ chrome.action.onClicked.addListener(async (tab) => {
         await tryOperation();
     }
 });
-

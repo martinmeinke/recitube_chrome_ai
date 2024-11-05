@@ -3,7 +3,7 @@
   "name": "Recitube",
   "version": "1.0",
   "description": "Extract ingredients from YouTube videos",
-  "permissions": ["activeTab", "sidePanel"],
+  "permissions": ["activeTab", "sidePanel", "declarativeContent"],
   "action": {
     "default_title": "Extract Ingredients",
     "default_icon": {

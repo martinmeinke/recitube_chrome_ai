@@ -32,12 +32,26 @@ function createRecipeCard(recipe) {
         ingredientCell.textContent = ingredient;
         
         const linkCell = document.createElement('td');
-        const buyLink = document.createElement('a');
-        buyLink.href = `https://www.amazon.com/s?k=${encodeURIComponent(ingredient)}`;
-        buyLink.className = 'buy-link';
-        buyLink.textContent = 'Buy';
-        buyLink.target = '_blank';
-        linkCell.appendChild(buyLink);
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'button-container';
+
+        // Create Amazon button
+        const amazonLink = document.createElement('a');
+        amazonLink.href = `https://www.amazon.com/s?k=${encodeURIComponent(ingredient)}`;
+        amazonLink.className = 'buy-link amazon';
+        amazonLink.textContent = 'Amazon';
+        amazonLink.target = '_blank';
+
+        // Create Walmart button
+        const walmartLink = document.createElement('a');
+        walmartLink.href = `https://www.walmart.com/search?q=${encodeURIComponent(ingredient)}`;
+        walmartLink.className = 'buy-link walmart';
+        walmartLink.textContent = 'Walmart';
+        walmartLink.target = '_blank';
+
+        buttonContainer.appendChild(amazonLink);
+        buttonContainer.appendChild(walmartLink);
+        linkCell.appendChild(buttonContainer);
         
         row.appendChild(ingredientCell);
         row.appendChild(linkCell);

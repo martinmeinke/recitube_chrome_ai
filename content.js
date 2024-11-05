@@ -80,6 +80,7 @@ async function extractTranscriptText() {
 }
 
 function openTranscript() {
+    const timeout_after_button_click = 1000;
     const moreActionsButton = document.querySelector('tp-yt-paper-button[id=expand]');
     if (moreActionsButton) {
         moreActionsButton.click();
@@ -91,11 +92,11 @@ function openTranscript() {
                     extractTranscriptText().catch(error => {
                         logger.error("Error in extractTranscriptText:", error);
                     });
-                }, 1000);
+                }, timeout_after_button_click);
             } else {
                 logger.log("Transcript button not found or unavailable for this video.");
             }
-        }, 1000);
+        }, timeout_after_button_click);
     } else {
         logger.log("More actions button not found.");
     }

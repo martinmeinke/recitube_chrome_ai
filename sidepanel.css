@@ -41,17 +41,22 @@ body {
 }
 
 .ingredients-table td {
-    padding: 8px 4px;
+    padding: 12px 4px;
 }
 
 .ingredients-table td:last-child {
     text-align: right;
 }
 
+.button-container {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
 .buy-link {
     display: inline-block;
     padding: 4px 12px;
-    background: #1a73e8;
     color: white;
     text-decoration: none;
     border-radius: 16px;
@@ -59,8 +64,20 @@ body {
     transition: background-color 0.2s;
 }
 
-.buy-link:hover {
-    background: #1557b0;
+.buy-link.amazon {
+    background: #FFB700;  /* Amazon yellow */
+}
+
+.buy-link.amazon:hover {
+    background: #E6A500;
+}
+
+.buy-link.walmart {
+    background: #0071DC;  /* Walmart blue */
+}
+
+.buy-link.walmart:hover {
+    background: #005CB3;
 }
 
 #status-message {
