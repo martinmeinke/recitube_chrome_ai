@@ -1,8 +1,8 @@
 - Improve error handling
--- Show error message in sidepanel if json is not valid
--- Show error message in sidepanel if video is not a recipe video
--- Show error message in sidepanel if no LLM is available
--- Show error message in sidepanel if LLM returns an error
+- - Show error message in sidepanel if json is not valid
+- - Show error message in sidepanel if video is not a recipe video
+- - Show error message in sidepanel if no LLM is available
+- - Show error message in sidepanel if LLM returns an error
 
 - Display message if recitupe was clicked on a non-recipe video
 - Check if explicit timeouts are needed or shorter timeout and retry can improve throughput
