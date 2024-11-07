@@ -6,3 +6,5 @@
 
 - Display message if recitupe was clicked on a non-recipe video
 - Check if explicit timeouts are needed or shorter timeout and retry can improve throughput
+- Determine context length of the LLM
+- Also include video description in the prompt
