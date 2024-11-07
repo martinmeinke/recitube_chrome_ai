@@ -4,7 +4,19 @@ console.log("sidepanel connected to background");
 // Add status handling functions
 function showStatus(message) {
     const statusElement = document.getElementById('status-message');
-    statusElement.textContent = message;
+    // Clear existing content
+    statusElement.innerHTML = '';
+    
+    // Create and add spinner
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    statusElement.appendChild(spinner);
+    
+    // Add message
+    const messageText = document.createElement('span');
+    messageText.textContent = message;
+    statusElement.appendChild(messageText);
+    
     statusElement.style.display = 'block';
 }
 
@@ -68,7 +80,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
     switch(message.type) {
         case 'processingStarted':
-            showStatus('Processing video transcript...');
+            showStatus('Extracting ingredients...');
             break;
             
         case 'ingredientsForSidePanel':

@@ -24,6 +24,10 @@ I am experimenting with iteratively shortening the transcript to fit the context
 This is another issue that is not easily solvable with the current approach.
 Maybe easier solutions could be to either scan the video description / comment section for a list of ingredients, or get extra fancy and try to extract the ingredients via image-to-text models. The sky is the limit of course.
 
+### How to use
+1. Clone the repo 
+2. In chrome, go to Settings > Extensions, and enable "Developer mode". Then click on "Load unpacked" and select the root folder of the cloned repo.
+3. In chrome, go to youtube.com, pull up the video of a recipe you want to cook, and click on the Recitube icon (chef hat) in the toolbar.
 
 ## License
 
