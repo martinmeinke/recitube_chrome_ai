@@ -17,10 +17,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function initializeAI() {
     try {
-        const model = await window.ai.assistant.create();
+        const model = await window.ai.languageModel.create();
         return model;
     } catch (error) {
-        logger.error("Error initializing AI:", error);
+        logger.warn("Error initializing AI:", error);
+        chrome.runtime.sendMessage({ type: 'error', error: 'Error initializing AI' });
         return null;
     }
 }
@@ -33,11 +34,11 @@ function getDescriptionText() {
         descriptionText = [...segments].map(segment => segment.innerText).join(' ');
         logger.log("description text:", descriptionText);
 
-        const MAX_DESCRIPTION_LENGTH = 1000;
+        const MAX_DESCRIPTION_LENGTH = 5000;
         descriptionText = descriptionText.substring(0, MAX_DESCRIPTION_LENGTH);
     } else {
         chrome.runtime.sendMessage({ type: 'error', error: 'Could not find video description' });
-        logger.error("Description container not found.");
+        logger.warn("Description container not found.");
     }
     return descriptionText;
 }
@@ -50,7 +51,7 @@ function getTranscriptText() {
         transcriptText = [...segments].map(segment => segment.innerText).join(' ');
         logger.log("Transcript text:", transcriptText);
 
-        const MAX_TRANSCRIPT_LENGTH = 2000;
+        const MAX_TRANSCRIPT_LENGTH = 10000;
         transcriptText = transcriptText.substring(0, MAX_TRANSCRIPT_LENGTH);
         return transcriptText;
     } else {
@@ -88,7 +89,7 @@ async function extractIngredientListFromDescription(model, descriptionText) {
     lists, you should return an empty array. If it does, you should list all ingredients, recipe by recipe, such that i can easily search for them online.
     Please list just the recipe title and ingredients, no amounts needed. Please return just the plain ingredient info.
     Your output must always be only JSON , here is an example response:
-    [{"name": "Tuna with rice", "ingredients": ["Tuna", "Rice"]},{"name": "Broccoli with garlic", "ingredients": ["garlic", "broccoli"]}]
+    [{"name": "Tuna with rice", "ingredients": ["Tuna", "Rice", "Salt", "Pepper", "Olive oil"]},{"name": "Broccoli with garlic", "ingredients": ["garlic", "broccoli"]}]
     Under no circumstances return any preamble or explanations. Start your output with [ and end with ].
     Don't output any newlines
     If the description does not contain any recipes, return: []`;
@@ -107,7 +108,7 @@ async function extractIngredientListFromTranscript(model, transcriptText) {
     Please list just the recipe title and ingredients, no amounts needed. Please return just the plain ingredient info.
     Your output must always be only JSON , here is an example response:
     
-    [{"name": "Tuna with rice", "ingredients": ["Tuna", "Rice"]},{"name": "Broccoli with garlic", "ingredients": ["garlic", "broccoli"]}]
+    [{"name": "Tuna with rice", "ingredients": ["Tuna", "Rice", "Salt", "Pepper", "Olive oil"]},{"name": "Broccoli with garlic", "ingredients": ["garlic", "broccoli"]}]
     
     Under no circumstances return any preamble or explanations. Start your output with [ and end with ].
     Don't output any newlines`;

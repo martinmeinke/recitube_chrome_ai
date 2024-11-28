@@ -13,12 +13,12 @@ chrome.action.onClicked.addListener(async (tab) => {
                 await chrome.sidePanel.open({ windowId: tab.windowId });
                 await chrome.tabs.sendMessage(tab.id, {action: "extractTranscript"});
             } catch (error) {
-                console.error('Error:', error);
+                console.warn('Error:', error);
                 if (retryCount < maxRetries) {
                     retryCount++;
                     setTimeout(tryOperation, retryDelay);
                 } else {
-                    console.error('Max retries reached. Could not open side panel.');
+                    console.warn('Max retries reached. Could not open side panel.');
                 }
             }
         };

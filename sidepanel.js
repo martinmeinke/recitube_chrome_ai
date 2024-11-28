@@ -1,11 +1,23 @@
 // Establish connection with background script
 console.log("sidepanel connected to background");
 
+function showErrorStatus(message) {
+    const statusElement = document.getElementById('status-message');
+    statusElement.innerHTML = '';
+    statusElement.classList.add('error');
+    
+    const messageText = document.createElement('span');
+    messageText.textContent = message;
+    statusElement.appendChild(messageText);
+    
+    statusElement.style.display = 'block';
+}
+
 // Add status handling functions
 function showStatus(message) {
     const statusElement = document.getElementById('status-message');
-    // Clear existing content
     statusElement.innerHTML = '';
+    statusElement.classList.remove('error');  // Remove error class if it exists
     
     // Create and add spinner
     const spinner = document.createElement('div');
@@ -77,15 +89,17 @@ function createRecipeCard(recipe) {
 // Modify your message listener to handle status updates
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log("sidepanel received message:", message);
-    
+    const ingredientsList = document.getElementById('ingredients-list');
+   
     switch(message.type) {
         case 'processingStarted':
             showStatus('Extracting ingredients...');
+            ingredientsList.innerHTML = '';
+
             break;
             
         case 'ingredientsForSidePanel':
             hideStatus();
-            const ingredientsList = document.getElementById('ingredients-list');
             ingredientsList.innerHTML = '';
             
             message.recipes.forEach(recipe => {
@@ -95,7 +109,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             break;
             
         case 'error':
-            showStatus('Error: ' + message.error);
+            showErrorStatus('Error: ' + message.error);
             break;
     }
 });
