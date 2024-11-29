@@ -15,6 +15,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+function getChromeMajorVersion() {
+    const match = navigator.userAgent.match(/Chrome\/(\d+)/);
+    const version = match ? parseInt(match[1], 10) : null;
+    logger.log("Chrome version:", version);
+    return version;
+}
+
+function maxContentLength(){
+    if(getChromeMajorVersion() >= 133){
+        return 5000;
+    }
+    return 2000;
+}
+
 async function initializeAI() {
     try {
         const model = await window.ai.languageModel.create();
@@ -34,8 +48,7 @@ function getDescriptionText() {
         descriptionText = [...segments].map(segment => segment.innerText).join(' ');
         logger.log("description text:", descriptionText);
 
-        const MAX_DESCRIPTION_LENGTH = 5000;
-        descriptionText = descriptionText.substring(0, MAX_DESCRIPTION_LENGTH);
+        descriptionText = descriptionText.substring(0, maxContentLength());
     } else {
         chrome.runtime.sendMessage({ type: 'error', error: 'Could not find video description' });
         logger.warn("Description container not found.");
@@ -51,8 +64,7 @@ function getTranscriptText() {
         transcriptText = [...segments].map(segment => segment.innerText).join(' ');
         logger.log("Transcript text:", transcriptText);
 
-        const MAX_TRANSCRIPT_LENGTH = 10000;
-        transcriptText = transcriptText.substring(0, MAX_TRANSCRIPT_LENGTH);
+        transcriptText = transcriptText.substring(0, maxContentLength());
         return transcriptText;
     } else {
         chrome.runtime.sendMessage({ type: 'error', error: 'Could not find video transcript' });
