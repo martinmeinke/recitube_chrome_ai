@@ -32,6 +32,7 @@ function maxContentLength(){
 async function initializeAI() {
     try {
         const model = await window.ai.languageModel.create();
+        var response = await model.prompt("hi");
         return model;
     } catch (error) {
         logger.warn("Error initializing AI:", error);
