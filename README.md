@@ -14,6 +14,10 @@ Recitube fetches video transcripts from youtube. It then instruments the Chrome 
 
 See it in action [here](https://youtu.be/aShynj946qc).
 
+<p align="center">
+  <img src="img/screenshot_waffles.png" alt="Recitube Screenshot" width="600">
+</p>
+
 ## Known Issues
 
 _The extension may not work on all YouTube videos._
